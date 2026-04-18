@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard de clima con visualización avanzada de datos. Busca cualquier ciudad y consulta temperatura, humedad, viento y pronóstico de 24 horas." />
+  <meta name="theme-color" content="#38bdf8" />
+  <title>climaApp — Dashboard de Clima</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+  <!-- ═══ VIDEO BACKGROUND ════════════════════════════════════════════ -->
+  <video id="bg-video" class="bg-video" autoplay muted loop playsinline>
+    <source src="img/Video.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay" aria-hidden="true"></div>
+
+  <!-- ═══ HEADER ══════════════════════════════════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <i data-lucide="cloud-sun" class="logo-icon" aria-hidden="true"></i>
+        <span class="logo-text">Clima MaxApp</span>
+      </div>
+      <button id="theme-toggle" class="btn-icon" aria-label="Cambiar a modo oscuro">
+        <span id="theme-icon-wrap"><i data-lucide="moon"></i></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN ════════════════════════════════════════════════════════ -->
+  <main class="container">
+
+    <!-- Hero: búsqueda centrada en pantalla -->
+    <section class="hero-section" aria-label="Buscar ciudad">
+      <h1 class="hero-title">¿Cómo está el clima hoy?</h1>
+
+      <div class="search-wrapper" id="search">
+        <i data-lucide="search" class="search-icon-lucide" aria-hidden="true"></i>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Buscar ciudad..."
+          autocomplete="off"
+          aria-label="Nombre de ciudad"
+          aria-autocomplete="list"
+          aria-haspopup="listbox"
+          aria-controls="autocomplete-list"
+        />
+        <ul
+          id="autocomplete-list"
+          class="autocomplete-list"
+          role="listbox"
+          aria-label="Sugerencias de ciudades"
+        ></ul>
+      </div>
+
+      <!-- Ciudades favoritas (debajo del buscador) -->
+      <section id="favorites" class="favorites-section" aria-label="Ciudades favoritas">
+        <div id="favorites-list" class="favorites-list"></div>
+      </section>
+    </section>
+
+    <!-- Feedback: error -->
+    <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+
+    <!-- Feedback: carga -->
+    <div id="loading-spinner" class="loading-spinner" aria-live="polite" aria-label="Cargando datos del clima">
+      <div class="spinner" aria-hidden="true"></div>
+      <span>Obteniendo datos...</span>
+    </div>
+
+    <!-- Panel de clima (oculto hasta búsqueda) -->
+    <div id="weather-display" class="weather-display">
+
+      <!-- Tarjeta clima actual -->
+      <article id="current-weather" class="card current-weather" aria-label="Clima actual">
+        <div class="weather-header">
+          <div class="city-info">
+            <h2 id="city-name" class="city-name"></h2>
+            <p id="city-date" class="city-date"></p>
+          </div>
+          <button id="favorite-btn" class="btn-icon favorite-btn" aria-label="Agregar a favoritos">
+            <span id="favorite-icon-wrap"><i data-lucide="star"></i></span>
+          </button>
+        </div>
+
+        <div class="weather-main">
+          <img id="weather-icon" class="weather-icon" src="" alt="" width="80" height="80" />
+          <div class="temp-container">
+            <span id="temperature" class="temperature"></span>
+            <span class="temp-unit" aria-hidden="true">°C</span>
+          </div>
+        </div>
+
+        <p id="weather-description" class="weather-description"></p>
+
+        <div class="weather-details">
+          <div class="detail-item">
+            <i data-lucide="thermometer" class="detail-icon" aria-hidden="true"></i>
+            <span class="detail-label">Sensación</span>
+            <span id="feels-like" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <i data-lucide="droplets" class="detail-icon" aria-hidden="true"></i>
+            <span class="detail-label">Humedad</span>
+            <span id="humidity" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <i data-lucide="wind" class="detail-icon" aria-hidden="true"></i>
+            <span class="detail-label">Viento</span>
+            <span id="wind-speed" class="detail-value"></span>
+          </div>
+          <div class="detail-item">
+            <i data-lucide="gauge" class="detail-icon" aria-hidden="true"></i>
+            <span class="detail-label">Presión</span>
+            <span id="pressure" class="detail-value"></span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Tarjeta gráfico 24h -->
+      <article id="chart-container" class="card chart-container" aria-label="Pronóstico de temperatura 24 horas">
+        <h3 class="chart-title">Temperatura — próximas 24 horas</h3>
+        <div class="chart-wrapper">
+          <canvas id="temp-chart" role="img" aria-label="Gráfico de línea con la evolución de temperatura cada 3 horas"></canvas>
+        </div>
+      </article>
+
+    </div><!-- /weather-display -->
+
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
