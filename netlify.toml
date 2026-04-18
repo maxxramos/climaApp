@@ -1,0 +1,8 @@
+# ── Netlify configuration ─────────────────────────────────────────────
+# El comando de build genera config.js en tiempo de despliegue
+# usando la variable de entorno OWM_API_KEY definida en el panel de Netlify.
+# De esta forma config.js puede seguir en .gitignore (nunca en el repo).
+
+[build]
+  command = "node build.js"
+  publish = "."

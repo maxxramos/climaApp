@@ -1,1 +1,7 @@
+# config.js contiene la API key — solo existe en local y es generado por
+# build.js en Netlify a partir de la variable de entorno OWM_API_KEY.
+# NUNCA subas este archivo con una key real a un repositorio público.
 config.js
+
+# build.js genera este archivo en tiempo de despliegue — no necesita estar en el repo
+# (build.js sí debe estar commiteado para que Netlify lo ejecute)

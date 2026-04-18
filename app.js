@@ -24,6 +24,12 @@ const favoritesList    = document.getElementById('favorites-list');
 
 // ── Inicialización ─────────────────────────────────────────────────────
 (function init() {
+  if (typeof CONFIG === 'undefined' || !CONFIG.API_KEY || CONFIG.API_KEY === 'TU_API_KEY_AQUI') {
+    console.error('[climaApp] config.js no está cargado o la API key no está configurada.');
+    document.getElementById('error-message').textContent =
+      'Error de configuración: falta la API key. Si eres el administrador, revisa config.js o las variables de entorno en Netlify.';
+    document.getElementById('error-message').classList.add('visible');
+  }
   lucide.createIcons();
   loadTheme();
   renderFavorites();
@@ -98,14 +104,19 @@ function attachEventListeners() {
 
 async function fetchCitySuggestions(query) {
   try {
+    if (typeof CONFIG === 'undefined') throw new Error('config.js no está cargado. Verifica el despliegue.');
     const url = `${CONFIG.BASE_URL}/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${CONFIG.API_KEY}`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error('Geocoding error');
+    if (res.status === 401) throw new Error('API key inválida. Edita config.js con tu clave de OpenWeatherMap.');
+    if (!res.ok) throw new Error(`Error al buscar ciudades (${res.status}).`);
     const data = await res.json();
     autocompleteData = data;
     renderDropdown(data);
-  } catch {
+  } catch (err) {
+    console.error('[fetchCitySuggestions]', err);
     closeDropdown();
+    showError(err.message || 'No se pudo conectar con el servicio de búsqueda.');
+    setTimeout(hideError, 4000);
   }
 }
 
